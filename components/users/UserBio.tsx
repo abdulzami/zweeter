@@ -1,8 +1,8 @@
 import useUser from "@/hooks/useUser";
 import useCurrentUser from "@/hooks/userCurrentUser";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { BiCalendar } from "react-icons/bi";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Button from "../Button";
 import useEditModal from "@/hooks/useEditModal";
 import useFollow from "@/hooks/useFollow";
@@ -18,6 +18,15 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
   const editModal = useEditModal();
 
   const { isFollowing, toggleFollow } = useFollow(userId);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const followAction = useCallback(async () => {
+    setIsLoading(true);
+
+    await toggleFollow();
+
+    setIsLoading(false);
+  }, [setIsLoading, toggleFollow]);
 
   const createdAt = useMemo(() => {
     if (!fetchedUser?.createdAt) {
@@ -33,10 +42,11 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           <Button secondary label="Edit" onClick={editModal.onOpen} />
         ) : (
           <Button
-            secondary={!isFollowing}
+            secondary={isFollowing}
             label={isFollowing ? "Unfollow" : "Follow"}
-            onClick={toggleFollow}
-            outline={isFollowing}
+            onClick={followAction}
+            outline={!isFollowing}
+            disabled={isLoading}
           />
         )}
       </div>
