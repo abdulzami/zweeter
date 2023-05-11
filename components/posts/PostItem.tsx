@@ -21,12 +21,13 @@ const PostItem: React.FC<PostItemProps> = ({ data, userId }) => {
 
   const goToUser = useCallback(
     (event: any) => {
-      event.StopPropagation();
+      event.stopPropagation();
 
       router.push(`/users/${data.user.id}`);
     },
     [router, data.user.id]
   );
+  
 
   const goToPost = useCallback(() => {
     router.push(`/posts/${data.id}`);

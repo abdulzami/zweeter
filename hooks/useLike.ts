@@ -29,7 +29,7 @@ const useLike = ({ postId, userId }: { postId: string; userId?: string }) => {
       if (hasLiked) {
         request = () => axios.delete("/api/like", { data: { postId } });
       } else {
-        request = () => axios.post("api/like", { postId });
+        request = () => axios.post("/api/like", { postId });
       }
 
       await request();
